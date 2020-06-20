@@ -13,8 +13,8 @@ let cell_width = 26;    // Width of each cell
 let cell_height = 26;   // height of each cell
 let canvas_width = 832; // width of canvas
 let canvas_height = 832;// height of canvas
-let ground_0;           // Temp calling of img object
-let grass_0;            // Temp calling of img object
+let fr = 24;            // framerate
+
 
 // @Name:   preload
 // @Type:   function
@@ -22,9 +22,12 @@ let grass_0;            // Temp calling of img object
 // @param:  none
 // @return: none
 function preload() {
-  ground_0 = loadImage('img/ground_tile_0.png');
-  grass_0 = loadImage('img/grass_tile_0.png');
+    tile_images = loadImages(Tiles);
+    value_map = loadGameMap(tile_images, baseMap);
+    game_grid = new GameGrid(canvas_width/cell_width, canvas_height/cell_height, cell_width, cell_height, 200);
+    tile_manager = new TileManager(tile_images, game_grid, value_map);
 }
+
 
 // @Name:   setup
 // @Type:   function
@@ -32,18 +35,11 @@ function preload() {
 // @param:  none
 // @return: none
 function setup() {
+    frameRate(fr);
     createCanvas(canvas_width, canvas_height);
-    game_grid = new GameGrid(canvas_width/cell_width, canvas_height/cell_height, cell_width, cell_height, 200);
-    for (var i = 0; i < 25; i++)
-    {
-        image(grass_0, game_grid.getXPos(i), game_grid.getYPos(23));
-    }
-    for (var i = 0; i < 25; i++)
-    {
-        image(ground_0, game_grid.getXPos(i), game_grid.getYPos(24));
-    }
-    player_1 = new Player(250, 250, new Rectangle(100, 50), 100);
+    tile_manager.draw();
 }
+
 
 // @Name:   draw
 // @Type:   function
@@ -52,17 +48,9 @@ function setup() {
 // @return: none
 function draw() {
     background(230);
-    game_grid.draw();
-    for (var i = 0; i < canvas_width/cell_width; i++)
-    {
-        image(grass_0, game_grid.getXPos(i), game_grid.getYPos(canvas_height/cell_height-2));
-    }
-    for (var i = 0; i < canvas_width/cell_width; i++)
-    {
-        image(ground_0, game_grid.getXPos(i), game_grid.getYPos(canvas_height/cell_height-1));
-    }
-    // player_1.draw();
+    tile_manager.draw();
 }
+
 
 // @Name:   keyPressed
 // @Type:   function
@@ -74,10 +62,11 @@ function keyPressed()
     // If g is pressed
     if (keyCode == '71')
     {
-        console.log("Grid is shown");
-        game_grid.view_outlines = false;
+        console.log("Grid is hidden");
+        tile_manager.game_grid.view_outlines = false;
     }
 }
+
 
 // @Name:   keyReleased
 // @Type:   function
@@ -89,10 +78,48 @@ function keyReleased()
     // If g is released
     if (keyCode == '71')
     {
-        console.log("Grid is hidden");
-        game_grid.view_outlines = true;
+        console.log("Grid is shown");
+        tile_manager.game_grid.view_outlines = true;
     }
 }
+
+
+// @Name:   loadImages
+// @Type:   function
+// @Desc:   loads the images into a P5.js Image object and returns map of them
+// @param:  <file_path>             json_file: file path to file to read from
+// @return: <<string:Image> map>    image_mapping: map of images by image name
+function loadImages(json_file)
+{
+    var image_mapping = [];
+    for (var i = 0; i < json_file.length; i++)
+    {
+        image_mapping[json_file[i].name] = loadImage(json_file[i].image);
+    }
+    
+    return image_mapping;
+}
+
+
+// @Name:   keyReleased
+// @Type:   function
+// @Desc:   Loads a game map file, consisting of tile maps, grid-tile maps, and grid
+// @param:  <<string:image> map>    tile_images: map of tile names to P5.js image objects
+//          <file_path>             baseMap: file path to file to read in entire map tile data
+// @return: <<int:tileType> map>    game_map: map of tile type by tile position
+function loadGameMap(tile_images, baseMap)
+{
+    var game_map = [];
+    for (var i = 0; i < baseMap.length; i++)
+    {
+        if (baseMap[i].entireRow)
+        {
+            game_map[baseMap[i].rowNumber] = baseMap[i].tile;
+        }
+    }
+    return game_map;
+}
+
 
 // @Name:   Rectangle
 // @Type:   class
@@ -113,6 +140,7 @@ class Rectangle
         quad(pos_x, pos_y, pos_x + this.width, pos_y, pos_x + this.width, pos_y+ this.height, pos_x, pos_y + this.height );
     }
 }
+
 
 //////////////////////////////////////////////////////////////////////////////////
 // @Name:   Player                                                              //
@@ -141,6 +169,7 @@ class Player
         this.color = color;
     }
 
+
     // @Name:   draw
     // @Type:   function
     // @Desc:   draws the object to the canvas
@@ -152,6 +181,7 @@ class Player
         this.shape.draw(this.pos_x, this.pos_y);
     }
 }
+
 
 //////////////////////////////////////////////////////////////////////////////////
 // @Name:   GameGrid                                                            //
@@ -188,6 +218,7 @@ class GameGrid
 
         this.view_outlines = true;
     }
+
 
     // @Name:   draw
     // @Type:   function
@@ -227,6 +258,7 @@ class GameGrid
         }
     }
 
+
     // @Name:   getXPos
     // @Type:   function
     // @Desc:   returns the left x position of a tile
@@ -237,6 +269,7 @@ class GameGrid
         return (hor_tile * this.cell_width)
     }
 
+
     // @Name:   getYPos
     // @Type:   function
     // @Desc:   returns the top y position of a tile
@@ -245,5 +278,60 @@ class GameGrid
     getYPos(ver_tile)
     {
         return (ver_tile * this.cell_height)
+    }
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// @Name:   Tile Manager                                                        //
+// @Type:   class                                                               //
+// @Desc:   the manager for tiles used in the game                              //
+// @param:  <<string:image> map> tile_images:    mapping of image objects       //
+//          <GameGrid>           game_grid:      grid object used for           //
+//                                                  canvas-wide grid            //
+//          <<int:string>> map>  value_mapping:  map of each cell's image       //
+// @Functions:                                                                  //
+// @Variables:                                                                  //
+//          <<string:image> map> tile_images:    mapping of image objects       //
+//          <GameGrid>          game_grid: grid object used for canvas-wide grid//
+//          <<int:string>> map>  value_mapping:  map of each cell's image       //
+//////////////////////////////////////////////////////////////////////////////////
+class TileManager
+{
+    constructor(tile_images, game_grid, value_mapping)
+    {
+        this.tile_images = tile_images;
+        this.game_grid = game_grid;
+        this.value_mapping = value_mapping;
+    }
+
+
+    // @Name:   draw
+    // @Type:   function
+    // @Desc:   draws the game tiles to the canvas
+    // @param:  none
+    // @return: none
+    draw()
+    {
+        this.game_grid.draw();
+        for (var i = 0; i < this.game_grid.ver_count; i++)
+        {
+            for (var j = 0; j < this.game_grid.hor_count; j++)
+            {
+                var specific_value_mapping = this.value_mapping[i];
+                
+                if (this.value_mapping[i].length == 1)
+                {
+                    tile_call = 0;
+                    specific_value_mapping = value_mapping[i];
+                }
+                if (specific_value_mapping != "empty")
+                {
+                    image(this.tile_images[specific_value_mapping], 
+                            this.game_grid.getXPos(j), 
+                            this.game_grid.getYPos(i));
+                }
+            }
+        }
     }
 }
