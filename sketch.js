@@ -4,17 +4,18 @@
 *           damaging eachother or building up their defenses                   *
 * Created by: Braeden Jeffrey Richards                                         *
 * Created on: June 18, 2020                                                    *
-* Last Updated: June 19, 2020                                                  *
+* Last Updated: June 20, 2020                                                  *
 ********************************************************************************/
 
 // Global variables
 let player_1;           // Temp calling of player 1
-let cell_width = 26;    // Width of each cell
-let cell_height = 26;   // height of each cell
-let canvas_width = 832; // width of canvas
-let canvas_height = 832;// height of canvas
+let cell_width = 40;    // Width of each cell
+let cell_height = 40;   // height of each cell
+let canvas_width = 800; // width of canvas
+let canvas_height = 800;// height of canvas
 let fr = 24;            // framerate
-
+let tile_manager;
+let input_manager;
 
 // @Name:   preload
 // @Type:   function
@@ -26,6 +27,7 @@ function preload() {
     value_map = loadGameMap(tile_images, baseMap);
     game_grid = new GameGrid(canvas_width/cell_width, canvas_height/cell_height, cell_width, cell_height, 200);
     tile_manager = new TileManager(tile_images, game_grid, value_map);
+    input_manager = new InputManager();
 }
 
 
@@ -52,38 +54,6 @@ function draw() {
 }
 
 
-// @Name:   keyPressed
-// @Type:   function
-// @Desc:   checks for which key was pressed and changes values accordingly
-// @param:  none
-// @return: none
-function keyPressed()
-{
-    // If g is pressed
-    if (keyCode == '71')
-    {
-        console.log("Grid is hidden");
-        tile_manager.game_grid.view_outlines = false;
-    }
-}
-
-
-// @Name:   keyReleased
-// @Type:   function
-// @Desc:   checks for which key as released and changes values accordingly
-// @param:  none
-// @return: none
-function keyReleased()
-{
-    // If g is released
-    if (keyCode == '71')
-    {
-        console.log("Grid is shown");
-        tile_manager.game_grid.view_outlines = true;
-    }
-}
-
-
 // @Name:   loadImages
 // @Type:   function
 // @Desc:   loads the images into a P5.js Image object and returns map of them
@@ -94,7 +64,10 @@ function loadImages(json_file)
     var image_mapping = [];
     for (var i = 0; i < json_file.length; i++)
     {
-        image_mapping[json_file[i].name] = loadImage(json_file[i].image);
+        if (json_file[i].name != "empty")
+        {
+            image_mapping[json_file[i].name] = loadImage(json_file[i].image);
+        }
     }
     
     return image_mapping;
@@ -279,6 +252,30 @@ class GameGrid
     {
         return (ver_tile * this.cell_height)
     }
+
+    getTileHorFromXPos(pos)
+    {
+        for (var i = 0; i < this.hor_count; i++)
+        {
+            if (pos <= (i * (this.cell_width) + this.cell_width) && pos > (i * (this.cell_width)))
+            {
+                return i;
+            }
+        }
+        return;     
+    }
+
+    getTileVertFromYPos(pos)
+    {
+        for (var i = 0; i < this.ver_count; i++)
+        {
+            if (pos <= (i * (this.cell_height) + this.cell_height) && pos > (i * (this.cell_height)))
+            {
+                return i;
+            }
+        }
+        return;
+    }
 }
 
 
@@ -329,9 +326,18 @@ class TileManager
                 {
                     image(this.tile_images[specific_value_mapping], 
                             this.game_grid.getXPos(j), 
-                            this.game_grid.getYPos(i));
+                            this.game_grid.getYPos(i),
+                            40, 40);
                 }
             }
+        }
+        // Draw any tile under the mouse that is meant to be drawn
+        if (!(this.game_grid.getTileHorFromXPos(input_manager.GetMouseX()) === undefined) && !(this.game_grid.getTileVertFromYPos(input_manager.GetMouseY()) === undefined))
+        {
+            image(this.tile_images["ground_0"], 
+                this.game_grid.getXPos(this.game_grid.getTileHorFromXPos(input_manager.GetMouseX())), 
+                this.game_grid.getYPos(this.game_grid.getTileVertFromYPos(input_manager.GetMouseY())),
+                40, 40);
         }
     }
 }

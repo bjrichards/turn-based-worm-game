@@ -111,13 +111,13 @@ baseMap = [
             "id" : "018",
             "entireRow" : "1",
             "rowNumber" : "18",
-            "tile" : "empty"
+            "tile" : "grass_0"
         },
         {
             "id" : "019",
             "entireRow" : "1",
             "rowNumber" : "19",
-            "tile" : "empty"
+            "tile" : "ground_0"
         },
         {
             "id" : "020",
