@@ -2,8 +2,8 @@
     let Tiles = [
         { 
             "id" : "00",
-            "name" : "empty",
-            "image" : "",
+            "name" : "background_0",
+            "image" : "img/background_tile_0.png",
             "overwritable" : "1"
         },
         { 

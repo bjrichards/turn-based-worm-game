@@ -24,20 +24,21 @@ class InputManager
 
     KeyPressed(keyCode)
     {
-        // If g is pressed
+        // 'g'
         if (keyCode == '71')
         {
-            tile_manager.game_grid.view_outlines = false;
+            tile_manager.game_grid.view_outlines = !tile_manager.game_grid.view_outlines;
+        }
+        // 'v'
+        else if (keyCode == '86')
+        {
+            tile_manager.game_grid.view_vertical_line = !tile_manager.game_grid.view_vertical_line;
         }
     }
 
     KeyReleased(keyCode)
     {
-        // If g is released
-        if (keyCode == '71')
-        {
-            tile_manager.game_grid.view_outlines = true;
-        }
+
     }
 
     GetMouseX()
