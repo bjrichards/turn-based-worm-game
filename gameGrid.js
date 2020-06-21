@@ -44,7 +44,7 @@ class GameGrid
         this.cell_width = cell_width;
         this.color = color;
 
-        this.view_outlines = true;
+        this.view_outlines = false;
         this.view_vertical_line = true;
     }
 
