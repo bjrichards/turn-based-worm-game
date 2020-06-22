@@ -11,7 +11,9 @@
 let player_1;           // Temp calling of player 1
 let cell_width = 40;    // Width of each cell
 let cell_height = 40;   // height of each cell
-let canvas_width = 800; // width of canvas
+let game_grid_width = 20;
+let game_grid_height = 20;
+let canvas_width = 1000; // width of canvas
 let canvas_height = 800;// height of canvas
 let fr = 24;            // framerate
 let tile_manager;
@@ -25,7 +27,7 @@ let input_manager;
 function preload() {
     tile_images = loadImages(Tiles);
     value_map = loadGameMap(tile_images, baseMap);
-    game_grid = new GameGrid(canvas_width/cell_width, canvas_height/cell_height, cell_width, cell_height, 200);
+    game_grid = new GameGrid(game_grid_width, game_grid_height, cell_width, cell_height, 0, 0, 200);
     tile_manager = new TileManager(tile_images, game_grid, value_map);
     input_manager = new InputManager();
 }

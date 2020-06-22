@@ -15,6 +15,8 @@
 //          <int> horizontal_count: number of tiles horizontally                    //
 //          <int> cell_height:      height of cell                                  //
 //          <int> cell_width:       width of cell                                   //
+//          <int> xpos:             leftmost position of the datagrid               //
+//          <int> ypos:             topmost position of the datagrid                //
 //          <int> color:            grayscale color value between 0 and 255         //
 // @Functions:                                                                      //
 //          draw()                                                                  //
@@ -28,6 +30,8 @@
 //          <int>   hor_count:          number of tiles horizontally                //
 //          <int>   cell_height:        height of individual cell                   //
 //          <int>   cell_width:         width of individual cell                    //
+//          <int>   x_pos:              leftmost position of the datagrid           //
+//          <int>   y_pos:              topmost position of the datagrid            //
 //          <int>   color:              grayscale color value betwween 0 and 255    //
 //          <bool>  view_outlines:      whether or not grid cell outlines should    //
 //                                      be drawn                                    //
@@ -36,12 +40,14 @@
 //////////////////////////////////////////////////////////////////////////////////////
 class GameGrid
 {
-    constructor(vertical_count, horizontal_count, cell_height, cell_width, color)
+    constructor(vertical_count, horizontal_count, cell_height, cell_width, xpos, ypos, color)
     {
         this.ver_count = vertical_count;
         this.hor_count = horizontal_count;
         this.cell_height = cell_height;
         this.cell_width = cell_width;
+        this.x_pos = xpos;
+        this.y_pos = ypos;
         this.color = color;
 
         this.view_outlines = false;
@@ -66,10 +72,10 @@ class GameGrid
             {
                 for (var j = 0; j < this.ver_count; j++)
                 {
-                    quad(i*this.cell_width, j*this.cell_height,
-                        i*this.cell_width + this.cell_width, j*this.cell_height,
-                        i*this.cell_width + this.cell_width, j*this.cell_height + this.cell_height,
-                        i*this.cell_width, j*this.cell_height + this.cell_height);
+                    quad(this.x_pos+i*this.cell_width, this.y_pos+j*this.cell_height,
+                        this.x_pos+i*this.cell_width + this.cell_width, this.y_pos+j*this.cell_height,
+                        this.x_pos+i*this.cell_width + this.cell_width, this.y_pos+j*this.cell_height + this.cell_height,
+                        this.x_pos+i*this.cell_width, this.y_pos+j*this.cell_height + this.cell_height);
                 }
             }
         }
@@ -86,8 +92,8 @@ class GameGrid
                     {
                         stroke(0);
                         strokeWeight(4);
-                        line(i*this.cell_width, j*this.cell_height,
-                            i*this.cell_width, j*this.cell_height + this.cell_height)
+                        line(this.x_pos+i*this.cell_width, this.y_pos+j*this.cell_height,
+                            this.x_pos+i*this.cell_width, this.y_pos+j*this.cell_height + this.cell_height)
                         stroke(255);
                         strokeWeight(1);
                     }
@@ -103,7 +109,7 @@ class GameGrid
     // @return: <int>: left x position of tile within canvas   
     getXPos(hor_tile)
     {
-        return (hor_tile * this.cell_width)
+        return (hor_tile * this.cell_width + this.x_pos)
     }
 
 
@@ -114,7 +120,7 @@ class GameGrid
     // @return: <int>: top y position of tile within canvas
     getYPos(ver_tile)
     {
-        return (ver_tile * this.cell_height)
+        return (ver_tile * this.cell_height + this.y_pos)
     }
 
 
@@ -128,7 +134,7 @@ class GameGrid
     {
         for (var i = 0; i < this.hor_count; i++)
         {
-            if (pos <= (i * (this.cell_width) + this.cell_width) && pos > (i * (this.cell_width)))
+            if (pos <= (this.x_pos + i * (this.cell_width) + this.cell_width) && pos > (this.x_pos + i * (this.cell_width)))
             {
                 return i;
             }
@@ -147,7 +153,7 @@ class GameGrid
     {
         for (var i = 0; i < this.ver_count; i++)
         {
-            if (pos <= (i * (this.cell_height) + this.cell_height) && pos > (i * (this.cell_height)))
+            if (pos <= (this.y_pos + i * (this.cell_height) + this.cell_height) && pos > (this.y_pos + i * (this.cell_height)))
             {
                 return i;
             }
