@@ -23,11 +23,13 @@
 //////////////////////////////////////////////////////////////////////////////////
 class TileManager
 {
-    constructor(tile_images, game_grid, value_mapping)
+    constructor(tile_images, game_grid, ui_grid, game_value_mapping, ui_value_mapping)
     {
         this.tile_images = tile_images;
         this.game_grid = game_grid;
-        this.value_mapping = value_mapping;
+        this.ui_grid = ui_grid;
+        this.game_value_mapping = game_value_mapping;
+        this.ui_value_mapping = ui_value_mapping;
     }
 
 
@@ -37,17 +39,17 @@ class TileManager
     // @param:  none
     // @return: none
     draw()
-    {
+    {  
+        // Game Grid
         for (var i = 0; i < this.game_grid.ver_count; i++)
         {
             for (var j = 0; j < this.game_grid.hor_count; j++)
             {
-                var specific_value_mapping = this.value_mapping[i];
-                
-                if (this.value_mapping[i].length == 1)
+                var specific_value_mapping = this.game_value_mapping[i];
+                if (this.game_value_mapping[i].length == 1)
                 {
                     tile_call = 0;
-                    specific_value_mapping = value_mapping[i];
+                    specific_value_mapping = game_value_mapping[i];
                 }
                 if (specific_value_mapping != "empty")
                 {
@@ -58,15 +60,44 @@ class TileManager
                 }
             }
         }
+
+        // UI Grid
+        for (var i = 0; i < this.ui_grid.ver_count; i++)
+        {
+            for (var j = 0; j < this.ui_grid.hor_count; j++)
+            {
+                var specific_value_mapping = this.ui_value_mapping[i];
+                if (this.ui_value_mapping[i].length == 1)
+                {
+                    tile_call = 0;
+                    specific_value_mapping = ui_value_mapping[i];
+                }
+                if (specific_value_mapping != "empty")
+                {
+                    image(this.tile_images[specific_value_mapping], 
+                            this.ui_grid.getXPos(j), 
+                            this.ui_grid.getYPos(i),
+                            50, 50);
+                }
+            }
+        }
+
         if (this.game_grid.view_outlines)
         {
             this.game_grid.draw();
         }
-        // this.game_grid.draw();
+
         if (this.game_grid.view_vertical_line)
         {
             this.game_grid.drawVerticalCenterLine();
         }
+
+        // UI Grid
+        if (this.ui_grid.view_outlines)
+        {
+            this.ui_grid.draw();
+        }
+        
         // Draw any tile under the mouse that is meant to be drawn
         if (!(this.game_grid.getTileHorFromXPos(input_manager.GetMouseX()) === undefined) && !(this.game_grid.getTileVertFromYPos(input_manager.GetMouseY()) === undefined))
         {
@@ -74,6 +105,13 @@ class TileManager
                 this.game_grid.getXPos(this.game_grid.getTileHorFromXPos(input_manager.GetMouseX())), 
                 this.game_grid.getYPos(this.game_grid.getTileVertFromYPos(input_manager.GetMouseY())),
                 40, 40);
+        }
+        else if (!(this.ui_grid.getTileHorFromXPos(input_manager.GetMouseX()) === undefined) && !(this.ui_grid.getTileVertFromYPos(input_manager.GetMouseY()) === undefined))
+        {
+            image(this.tile_images["highlight_0"], 
+                this.ui_grid.getXPos(this.ui_grid.getTileHorFromXPos(input_manager.GetMouseX())), 
+                this.ui_grid.getYPos(this.ui_grid.getTileVertFromYPos(input_manager.GetMouseY())),
+                50, 50);
         }
     }
 }

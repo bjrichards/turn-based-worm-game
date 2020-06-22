@@ -28,6 +28,7 @@ class InputManager
         if (keyCode == '71')
         {
             tile_manager.game_grid.view_outlines = !tile_manager.game_grid.view_outlines;
+            tile_manager.ui_grid.view_outlines = !tile_manager.ui_grid.view_outlines;
         }
         // 'v'
         else if (keyCode == '86')

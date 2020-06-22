@@ -65,7 +65,7 @@ class GameGrid
         if (this.view_outlines)
         {
             noFill();
-            stroke(255);
+            stroke(this.color);
 
             // Draw the quads of each cell
             for (var i = 0; i < this.hor_count; i++)

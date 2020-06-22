@@ -7,15 +7,29 @@
 * Last Updated: June 21, 2020                                                  *
 ********************************************************************************/
 
-// Global variables
+/*******************
+* Global variables *
+********************/
 let player_1;           // Temp calling of player 1
-let cell_width = 40;    // Width of each cell
-let cell_height = 40;   // height of each cell
+
+// Gameplay Grid
+let game_grid_cell_width = 40;    // Width of each cell
+let game_grid_cell_height = 40;   // height of each cell
 let game_grid_width = 20;
 let game_grid_height = 20;
+
+// In-Game UI Grid
+let ui_grid_cell_width = 50;
+let ui_grid_cell_height = 50;
+let ui_grid_width = 4;
+let ui_grid_height = 16;
+
+// Other
 let canvas_width = 1000; // width of canvas
 let canvas_height = 800;// height of canvas
 let fr = 24;            // framerate
+
+// Managers
 let tile_manager;
 let input_manager;
 
@@ -26,9 +40,11 @@ let input_manager;
 // @return: none
 function preload() {
     tile_images = loadImages(Tiles);
-    value_map = loadGameMap(tile_images, baseMap);
-    game_grid = new GameGrid(game_grid_width, game_grid_height, cell_width, cell_height, 0, 0, 200);
-    tile_manager = new TileManager(tile_images, game_grid, value_map);
+    game_value_map = loadGameMap(tile_images, baseMap);
+    ui_value_map = loadGameMap(tile_images, baseUI);
+    game_grid = new GameGrid(game_grid_width, game_grid_height, game_grid_cell_width, game_grid_cell_height, 0, 0, 255);
+    ui_grid = new GameGrid(ui_grid_height, ui_grid_width, ui_grid_cell_width, ui_grid_cell_height, 800, 0, 0);
+    tile_manager = new TileManager(tile_images, game_grid, ui_grid, game_value_map, ui_value_map);
     input_manager = new InputManager();
 }
 
@@ -51,7 +67,7 @@ function setup() {
 // @param:  none
 // @return: none
 function draw() {
-    background(230);
+    background(0);
     tile_manager.draw();
 }
 
