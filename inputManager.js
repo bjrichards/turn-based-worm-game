@@ -52,6 +52,11 @@ class InputManager
         return mouseY;
     }
 
+    MouseClicked(mX, mY)
+    {
+        tile_manager.addPlacedTile();
+    }
+
 }
 
 
@@ -74,4 +79,9 @@ function keyPressed()
 function keyReleased()
 {
     input_manager.KeyReleased(keyCode);
+}
+
+function mouseClicked()
+{
+    input_manager.MouseClicked(input_manager.GetMouseX(), input_manager.GetMouseY);
 }

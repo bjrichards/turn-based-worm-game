@@ -45,12 +45,7 @@ class TileManager
         {
             for (var j = 0; j < this.game_grid.hor_count; j++)
             {
-                var specific_value_mapping = this.game_value_mapping[i];
-                if (this.game_value_mapping[i].length == 1)
-                {
-                    tile_call = 0;
-                    specific_value_mapping = game_value_mapping[i];
-                }
+                var specific_value_mapping = this.game_value_mapping[i][j];
                 if (specific_value_mapping != "empty")
                 {
                     image(this.tile_images[specific_value_mapping], 
@@ -66,12 +61,7 @@ class TileManager
         {
             for (var j = 0; j < this.ui_grid.hor_count; j++)
             {
-                var specific_value_mapping = this.ui_value_mapping[i];
-                if (this.ui_value_mapping[i].length == 1)
-                {
-                    tile_call = 0;
-                    specific_value_mapping = ui_value_mapping[i];
-                }
+                var specific_value_mapping = this.ui_value_mapping[i][j];
                 if (specific_value_mapping != "empty")
                 {
                     image(this.tile_images[specific_value_mapping], 
@@ -101,7 +91,7 @@ class TileManager
         // Draw any tile under the mouse that is meant to be drawn
         if (!(this.game_grid.getTileHorFromXPos(input_manager.GetMouseX()) === undefined) && !(this.game_grid.getTileVertFromYPos(input_manager.GetMouseY()) === undefined))
         {
-            image(this.tile_images["grass_0"], 
+            image(this.tile_images["wood_0"], 
                 this.game_grid.getXPos(this.game_grid.getTileHorFromXPos(input_manager.GetMouseX())), 
                 this.game_grid.getYPos(this.game_grid.getTileVertFromYPos(input_manager.GetMouseY())),
                 40, 40);
@@ -112,6 +102,14 @@ class TileManager
                 this.ui_grid.getXPos(this.ui_grid.getTileHorFromXPos(input_manager.GetMouseX())), 
                 this.ui_grid.getYPos(this.ui_grid.getTileVertFromYPos(input_manager.GetMouseY())),
                 50, 50);
+        }
+    }
+
+    addPlacedTile()
+    {
+        if (!(this.game_grid.getTileHorFromXPos(input_manager.GetMouseX()) === undefined) && !(this.game_grid.getTileVertFromYPos(input_manager.GetMouseY()) === undefined))
+        {
+            this.game_value_mapping[this.game_grid.getTileVertFromYPos(input_manager.GetMouseY())][this.game_grid.getTileHorFromXPos(input_manager.GetMouseX())] = "wood_0";
         }
     }
 }

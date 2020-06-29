@@ -40,9 +40,9 @@ let input_manager;
 // @return: none
 function preload() {
     tile_images = loadImages(Tiles);
-    game_value_map = loadGameMap(tile_images, baseMap);
-    ui_value_map = loadGameMap(tile_images, baseUI);
-    game_grid = new GameGrid(game_grid_width, game_grid_height, game_grid_cell_width, game_grid_cell_height, 0, 0, 255);
+    game_value_map = loadGameMap(tile_images, baseMap, game_grid_height, game_grid_width);
+    ui_value_map = loadGameMap(tile_images, baseUI, ui_grid_height, ui_grid_width);
+    game_grid = new GameGrid(game_grid_height, game_grid_width, game_grid_cell_width, game_grid_cell_height, 0, 0, 255);
     ui_grid = new GameGrid(ui_grid_height, ui_grid_width, ui_grid_cell_width, ui_grid_cell_height, 800, 0, 0);
     tile_manager = new TileManager(tile_images, game_grid, ui_grid, game_value_map, ui_value_map);
     input_manager = new InputManager();
@@ -98,14 +98,17 @@ function loadImages(json_file)
 // @param:  <<string:image> map>    tile_images: map of tile names to P5.js image objects
 //          <file_path>             baseMap: file path to file to read in entire map tile data
 // @return: <<int:tileType> map>    game_map: map of tile type by tile position
-function loadGameMap(tile_images, baseMap)
+function loadGameMap(tile_images, mappy, rows, columns)
 {
     var game_map = [];
-    for (var i = 0; i < baseMap.length; i++)
+    var temp = 0;
+    for (var i = 0; i < rows; i++)
     {
-        if (baseMap[i].entireRow)
+        game_map[i] = [];
+        for (var j = 0; j < columns; j++)
         {
-            game_map[baseMap[i].rowNumber] = baseMap[i].tile;
+            game_map[mappy[temp].rowNumber][mappy[temp].columnNumber] = mappy[temp].tile;
+            temp = temp + 1;
         }
     }
     return game_map;
