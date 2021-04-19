@@ -93,6 +93,6 @@ baseUI = [
         "id" : "015",
         "entireRow" : "1",
         "rowNumber" : "15",
-        "tile" : "wood_0"
+        "tile" : "metal_0"
     }
 ];

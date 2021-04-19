@@ -424,7 +424,7 @@ baseUI = [
         "entireRow": "0",
         "columnNumber": "0",
         "rowNumber": "15",
-        "tile": "wood_0"
+        "tile": "wood_1"
     },
     {
         "id": "61",
@@ -438,13 +438,13 @@ baseUI = [
         "entireRow": "0",
         "columnNumber": "2",
         "rowNumber": "15",
-        "tile": "wood_0"
+        "tile": "metal_0"
     },
     {
         "id": "63",
         "entireRow": "0",
         "columnNumber": "3",
         "rowNumber": "15",
-        "tile": "wood_0"
+        "tile": "metal_1"
     }
 ];

@@ -3,7 +3,7 @@
 * Desc: Manages the tile placements and game grid for its grid                 *
 * Created by: Braeden Jeffrey Richards                                         *
 * Created on: June 21, 2020                                                    *
-* Last Updated: June 21, 2020                                                  *
+* Last Updated: April 16th, 2021                                               *
 ********************************************************************************/
 
 
@@ -30,6 +30,7 @@ class TileManager
         this.ui_grid = ui_grid;
         this.game_value_mapping = game_value_mapping;
         this.ui_value_mapping = ui_value_mapping;
+        this.chosen_block = "wood_0";
     }
 
 
@@ -91,7 +92,7 @@ class TileManager
         // Draw any tile under the mouse that is meant to be drawn
         if (!(this.game_grid.getTileHorFromXPos(input_manager.GetMouseX()) === undefined) && !(this.game_grid.getTileVertFromYPos(input_manager.GetMouseY()) === undefined))
         {
-            image(this.tile_images["wood_0"], 
+            image(this.tile_images[this.chosen_block], 
                 this.game_grid.getXPos(this.game_grid.getTileHorFromXPos(input_manager.GetMouseX())), 
                 this.game_grid.getYPos(this.game_grid.getTileVertFromYPos(input_manager.GetMouseY())),
                 40, 40);
@@ -109,7 +110,11 @@ class TileManager
     {
         if (!(this.game_grid.getTileHorFromXPos(input_manager.GetMouseX()) === undefined) && !(this.game_grid.getTileVertFromYPos(input_manager.GetMouseY()) === undefined))
         {
-            this.game_value_mapping[this.game_grid.getTileVertFromYPos(input_manager.GetMouseY())][this.game_grid.getTileHorFromXPos(input_manager.GetMouseX())] = "wood_0";
+            this.game_value_mapping[this.game_grid.getTileVertFromYPos(input_manager.GetMouseY())][this.game_grid.getTileHorFromXPos(input_manager.GetMouseX())] = this.chosen_block;
+        }
+        else if (!(this.ui_grid.getTileHorFromXPos(input_manager.GetMouseX()) === undefined) && !(this.ui_grid.getTileVertFromYPos(input_manager.GetMouseY()) === undefined))
+        {
+            this.chosen_block = this.ui_value_mapping[this.ui_grid.getTileVertFromYPos(input_manager.GetMouseY())][this.ui_grid.getTileHorFromXPos(input_manager.GetMouseX())];
         }
     }
 }
