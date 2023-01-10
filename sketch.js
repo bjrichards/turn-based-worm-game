@@ -40,11 +40,12 @@ let input_manager;
 // @return: none
 function preload() {
     tile_images = loadImages(Tiles);
+    tile_types = loadTileTypes(Tiles);
     game_value_map = loadGameMap(tile_images, baseMap, game_grid_height, game_grid_width);
     ui_value_map = loadGameMap(tile_images, baseUI, ui_grid_height, ui_grid_width);
     game_grid = new GameGrid(game_grid_height, game_grid_width, game_grid_cell_width, game_grid_cell_height, 0, 0, 255);
     ui_grid = new GameGrid(ui_grid_height, ui_grid_width, ui_grid_cell_width, ui_grid_cell_height, 800, 0, 0);
-    tile_manager = new TileManager(tile_images, game_grid, ui_grid, game_value_map, ui_value_map);
+    tile_manager = new TileManager(tile_images, tile_types, game_grid, ui_grid, game_value_map, ui_value_map);
     input_manager = new InputManager();
 }
 
@@ -77,18 +78,28 @@ function draw() {
 // @Desc:   loads the images into a P5.js Image object and returns map of them
 // @param:  <file_path>             json_file: file path to file to read from
 // @return: <<string:Image> map>    image_mapping: map of images by image name
-function loadImages(json_file)
-{
+function loadImages(json_file) {
     var image_mapping = [];
-    for (var i = 0; i < json_file.length; i++)
-    {
-        if (json_file[i].name != "empty")
-        {
+    for (var i = 0; i < json_file.length; i++) {
+        if (json_file[i].name != "empty") {
             image_mapping[json_file[i].name] = loadImage(json_file[i].image);
         }
     }
-    
+
     return image_mapping;
+}
+
+
+function loadTileTypes(json_obj) {
+    var tile_types = []
+    for (var i = 0; i < json_obj.length; i++) {
+        if (json_obj[i].name != "empty") {
+            var temp = new Tile(json_obj[i].id, json_obj[i].name, json_obj[i].overwritable, json_obj[i].image, null);
+            tile_types[json_obj[i].name] = temp;
+        }
+    }
+
+    return tile_types;
 }
 
 
@@ -98,15 +109,12 @@ function loadImages(json_file)
 // @param:  <<string:image> map>    tile_images: map of tile names to P5.js image objects
 //          <file_path>             baseMap: file path to file to read in entire map tile data
 // @return: <<int:tileType> map>    game_map: map of tile type by tile position
-function loadGameMap(tile_images, mappy, rows, columns)
-{
+function loadGameMap(tile_images, mappy, rows, columns) {
     var game_map = [];
     var temp = 0;
-    for (var i = 0; i < rows; i++)
-    {
+    for (var i = 0; i < rows; i++) {
         game_map[i] = [];
-        for (var j = 0; j < columns; j++)
-        {
+        for (var j = 0; j < columns; j++) {
             game_map[mappy[temp].rowNumber][mappy[temp].columnNumber] = mappy[temp].tile;
             temp = temp + 1;
         }
@@ -121,17 +129,14 @@ function loadGameMap(tile_images, mappy, rows, columns)
 // @param:  <int>   height: height of rectangle
 //          <int>   width: width of rectangle
 // @return: none
-class Rectangle 
-{
-    constructor(height, width) 
-    {
+class Rectangle {
+    constructor(height, width) {
         this.height = height;
         this.width = width;
     }
 
-    draw(pos_x, pos_y)
-    {
-        quad(pos_x, pos_y, pos_x + this.width, pos_y, pos_x + this.width, pos_y+ this.height, pos_x, pos_y + this.height );
+    draw(pos_x, pos_y) {
+        quad(pos_x, pos_y, pos_x + this.width, pos_y, pos_x + this.width, pos_y + this.height, pos_x, pos_y + this.height);
     }
 }
 
@@ -153,10 +158,8 @@ class Rectangle
 //          <shape> shape:  shape object the player is represented by           //
 //          <int>   color: grayscale color value betwewen 0 and 255             //
 //////////////////////////////////////////////////////////////////////////////////
-class Player
-{
-    constructor(x, y, shape, color)
-    {
+class Player {
+    constructor(x, y, shape, color) {
         this.pos_x = x;
         this.pos_y = y;
         this.shape = shape;
@@ -169,8 +172,7 @@ class Player
     // @Desc:   draws the object to the canvas
     // @param:  none
     // @return: none
-    draw()
-    {
+    draw() {
         fill(this.color);
         this.shape.draw(this.pos_x, this.pos_y);
     }

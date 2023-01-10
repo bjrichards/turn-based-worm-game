@@ -28,14 +28,16 @@
 //          <string>            tile_type:      whether it is a buildable tile  //
 //                                              or ui tile                      //
 //////////////////////////////////////////////////////////////////////////////////
-class Tile
-{
-    constructor(tile_id, tile_name, overwriteable, tile_image, tile_type)
-    {
+class Tile {
+    constructor(tile_id, tile_name, overwriteable, tile_image, tile_type) {
         this.tile_id = tile_id;
         this.tile_name = tile_name;
         this.overwriteable = overwriteable;
         this.tile_image = tile_image;
         this.tile_type = tile_type;
+    }
+
+    isOverwriteable() {
+        return this.overwriteable;
     }
 }
