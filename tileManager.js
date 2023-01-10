@@ -3,24 +3,48 @@
 * Desc: Manages the tile placements and game grid for its grid                 *
 * Created by: Braeden Jeffrey Richards                                         *
 * Created on: June 21, 2020                                                    *
-* Last Updated: April 16th, 2021                                               *
+* Last Updated: January 9th, 2023                                              *
 ********************************************************************************/
 
 
-//////////////////////////////////////////////////////////////////////////////////
-// @Name:   Tile Manager                                                        //
-// @Type:   class                                                               //
-// @Desc:   the manager for tiles used in the game                              //
-// @param:  <<string:image> map> tile_images:    mapping of image objects       //
-//          <GameGrid>           game_grid:      grid object used for           //
-//                                                  canvas-wide grid            //
-//          <<int:string>> map>  value_mapping:  map of each cell's image       //
-// @Functions:                                                                  //
-// @Variables:                                                                  //
-//          <<string:image> map> tile_images:    mapping of image objects       //
-//          <GameGrid>          game_grid: grid object used for canvas-wide grid//
-//          <<int:string>> map>  value_mapping:  map of each cell's image       //
-//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+// @Name:   Tile Manager                                                            //
+// @Type:   class                                                                   //
+// @Desc:   the manager for tiles used in the game                                  //
+//                                                                                  //
+// @param:                                                                          //
+//          <<string:image> map> tile_images:        mapping of image objects       //
+//          <<string:Tile> map>  tile_types:         info of available tiles        //
+//          <GameGrid>           game_grid:          grid object used for game map  //
+//                                                      section of canvas           //
+//          <GameGrid>           ui_grid:            grid object used for ui        //
+//                                                      section of the canvas       //
+//          <<int:string>> map>  game_value_mapping: map of each cell's image for   //
+//                                                      the game_grid               //
+//          <<int:string>> map>  ui_value_mapping:   map of each cell's image for   //
+//                                                      the ui_grid                 //
+// @Functions:                                                                      //
+//          draw():                                                                 //
+//              params:     none                                                    //
+//              returnType: none                                                    //
+//          addPlacedTile():                                                        //
+//              params:     none                                                    //
+//              returnType: none                                                    //
+//                                                                                  //
+// @Variables:                                                                      //
+//          <<string:image> map> tile_images:        mapping of image objects       //
+//          <<string:Tile> map>  tile_types:         info of available tiles        //
+//          <GameGrid>           game_grid:          grid object used for game map  //
+//                                                      section of canvas           //
+//          <GameGrid>           ui_grid:            grid object used for ui        //
+//                                                      section of the canvas       //
+//          <<int:string>> map>  game_value_mapping: map of each cell's image for   //
+//                                                      the game_grid               //
+//          <<int:string>> map>  ui_value_mapping:   map of each cell's image for   //
+//                                                      the ui_grid                 //
+//          <string>             chosen_block:       block that would be placed on  //
+//                                                      game_grid once clicked      //
+//////////////////////////////////////////////////////////////////////////////////////
 class TileManager {
     constructor(tile_images, tile_types, game_grid, ui_grid, game_value_mapping, ui_value_mapping) {
         this.tile_images = tile_images;
@@ -93,6 +117,12 @@ class TileManager {
         }
     }
 
+
+    // @Name:   addPlacedTile
+    // @Type:   function
+    // @Desc:   adds tile to game board or chooses selected tile to place depending on mouse position
+    // @param:  none
+    // @return: none
     addPlacedTile() {
         if (!(this.game_grid.getTileHorFromXPos(input_manager.GetMouseX()) === undefined) && !(this.game_grid.getTileVertFromYPos(input_manager.GetMouseY()) === undefined)) {
             var mouse_y = this.game_grid.getTileVertFromYPos(input_manager.GetMouseY())
